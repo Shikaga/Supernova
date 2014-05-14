@@ -1,14 +1,14 @@
 -----------------------------------------------------------------------------------------------
--- Client Lua Script for HelloWorld
--- Copyright (c) NCsoft. All rights reserved
+-- Client Lua Script for Supernova
+-- Copyright (c) Shikaga. All rights reserved
 -----------------------------------------------------------------------------------------------
  
 require "Window"
  
 -----------------------------------------------------------------------------------------------
--- HelloWorld Module Definition
+-- Supernova Module Definition
 -----------------------------------------------------------------------------------------------
-local HelloWorld = {} 
+local Supernova = {} 
 local Commodity
  
 -----------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ local restoreCalled = false
 -----------------------------------------------------------------------------------------------
 -- Initialization
 -----------------------------------------------------------------------------------------------
-function HelloWorld:new(o)
+function Supernova:new(o)
     o = o or {}
     setmetatable(o, self)
     self.__index = self 
@@ -29,9 +29,9 @@ function HelloWorld:new(o)
     return o
 end
 
-function HelloWorld:Init()
-	local bHasConfigureFunction = true
-	local strConfigureButtonText = "HW"
+function Supernova:Init()
+	local bHasConfigureFunction = false
+	local strConfigureButtonText = "Supernova"
 	local tDependencies = {"MarketplaceCommodity", "CommodityHandler", "Commodity"} 
     Apollo.RegisterAddon(self, bHasConfigureFunction, strConfigureButtonText, tDependencies)
     Apollo.RegisterEventHandler("CommodityInfoResults", "OnCommodityInfoResults", self)
@@ -41,9 +41,9 @@ end
 -----------------------------------------------------------------------------------------------
 -- HelloWorld OnLoad
 -----------------------------------------------------------------------------------------------
-function HelloWorld:OnLoad()
+function Supernova:OnLoad()
     -- load our form file
-	self.xmlDoc = XmlDoc.CreateFromFile("HelloWorld.xml")
+	self.xmlDoc = XmlDoc.CreateFromFile("Supernova.xml")
 	self.wndMain = Apollo.LoadForm(self.xmlDoc, "HelloWorldForm", nil, self)
 				
 	self.MarketplaceCommodity = Apollo.GetAddon("MarketplaceCommodity")
@@ -56,17 +56,17 @@ function HelloWorld:OnLoad()
 end
 
 
-function HelloWorld:OnSave(eLevel)
+function Supernova:OnSave(eLevel)
 	local save = {}
 	save.commodities = self.commodityHandler:Serialize()
 	return save
 end
 
-function HelloWorld:OnRestore(eLevel, tData)
+function Supernova:OnRestore(eLevel, tData)
 	self.commodityHandler:Deserialize(tData.commodities)
 end
 
-function HelloWorld:InitializeHooks()
+function Supernova:InitializeHooks()
 	-- Handle MarketplaceCommodity appearance or change
 	local fnOldHeaderBtnToggle = self.MarketplaceCommodity.OnHeaderBtnToggle
     self.MarketplaceCommodity.OnHeaderBtnToggle = function(tMarketPlaceCommodity)
@@ -81,12 +81,12 @@ function HelloWorld:InitializeHooks()
     end
 end
 
-function HelloWorld:OnCommodityInfoResults(nItemId, tStats, tOrders)
+function Supernova:OnCommodityInfoResults(nItemId, tStats, tOrders)
 	self.commodityHandler:OnCommodityInfoResults(nItemId, tStats, tOrders)
 	self:DrawCommodities()
 end
 
-function HelloWorld:DrawCommodities()
+function Supernova:DrawCommodities()
 	if (self.wndMain) then
 		local wndGrid = self.wndMain:FindChild("Grid")
 		if (wndGrid) then
@@ -106,17 +106,17 @@ end
 -- HelloWorldForm Functions
 -----------------------------------------------------------------------------------------------
 -- when the OK button is clicked
-function HelloWorld:OnOK()
+function Supernova:OnOK()
 	self.wndMain:Close() -- hide the window
 end
 
 -- when the Cancel button is clicked
-function HelloWorld:OnCancel()
+function Supernova:OnCancel()
 	self.wndMain:Close() -- hide the window
 end
 
 -- when the Add Commodity button is clicked
-function HelloWorld:OnAddCommodity( wndHandler, wndControl, eMouseButton )
+function Supernova:OnAddCommodity( wndHandler, wndControl, eMouseButton )
 	local commodityId = tonumber(wndControl:GetParent():GetName());
 	local commodity
 	commodity = self.commodityHandler:AddCommodity(commodityId)	
@@ -131,12 +131,12 @@ end
 -- Utils
 -----------------------------------------------------------------------------------------------
 
-function HelloWorld:LoadByName(strForm, wndParent)
+function Supernova:LoadByName(strForm, wndParent)
 	wndNew = Apollo.LoadForm(self.xmlDoc , strForm, wndParent, self)
 	return wndNew
 end
 
-function HelloWorld:PrintMembers(o)
+function Supernova:PrintMembers(o)
 	Print('Printing Members')
 	Print('----')
 	for key,value in pairs(o) do
@@ -146,7 +146,7 @@ function HelloWorld:PrintMembers(o)
 end
 
 -----------------------------------------------------------------------------------------------
--- HelloWorld Instance
+-- Supernova Instance
 -----------------------------------------------------------------------------------------------
-local HelloWorldInst = HelloWorld:new()
-HelloWorldInst:Init()
+local SupernovaInst = Supernova:new()
+SupernovaInst:Init()

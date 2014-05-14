@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Addon Author="" APIVersion="8" Name="HelloWorld" Description="">
-    <Script Name="HelloWorld.lua"/>
-    <Form Name="HelloWorld.xml"/>
+<Addon Author="" APIVersion="8" Name="Supernova" Description="">
+    <Script Name="Supernova.lua"/>
+    <Form Name="Supernova.xml"/>
     <Script Name="CommodityHandler.lua"/>
     <Script Name="Commodity.lua"/>
 </Addon>
