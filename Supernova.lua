@@ -127,6 +127,12 @@ function Supernova:OnAddCommodity( wndHandler, wndControl, eMouseButton )
 	self.wndMain:Invoke()
 end
 
+function Supernova:LaunchTicket( wndHandler, wndControl, eMouseButton )
+	local temp = Apollo.LoadForm(self.xmlDoc, "TradeTicket", nil, self)
+	temp:Invoke()
+end
+
+
 -----------------------------------------------------------------------------------------------
 -- Utils
 -----------------------------------------------------------------------------------------------
