@@ -81,6 +81,7 @@ function Supernova:InitializeHooks()
                 local x = self:LoadByName("AddButton", child)
             end
         end
+        Apollo.LoadForm(self.xmlDoc , "WatchlistButton", marketplaceWindow, self)
     end
 end
 
@@ -119,19 +120,22 @@ function Supernova:OnCancel()
 end
 
 -- when the a Ticket is closed button is clicked
-function Supernova:OnCloseTicket()
-	Print('Close Ticket invoked')
+function Supernova:OnToggleWatchlist()
+	self:OpenWatchlist()
+end
+
+function Supernova:OpenWatchlist()
+	self.commodityHandler:RequestCommodityInfo()
+	self.wndMain:Invoke()
 end
 
 -- when the Add Commodity button is clicked
 function Supernova:OnAddCommodity( wndHandler, wndControl, eMouseButton )
 	local commodityId = tonumber(wndControl:GetParent():GetName());
 	local commodity = self.commodityHandler:AddCommodity(commodityId)	
-    Print("Statistics requested for " .. commodity:GetId() .. " " .. commodity:GetName())
-	MarketplaceLib.RequestCommodityInfo(commodity:GetId())
 
 	self:DrawCommodities()
-	self.wndMain:Invoke()
+	self:OpenWatchlist()
 end
 
 function Supernova:LaunchTicket(commodity)

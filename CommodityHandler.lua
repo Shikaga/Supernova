@@ -25,12 +25,17 @@ function CommodityHandler:OnCommodityInfoResults(nItemId, tStats, tOrders)
 end
 
 function CommodityHandler:AddCommodity(commodityId)
+	Print("!!!")
 	if self.commodityMap[commodityId] then
 		return self.commodityMap[commodityId]
 	else
 		local commodity = Commodity:new {supernova = self.supernova, id = commodityId}
 		self.commodityMap[commodityId] = commodity
 		table.insert(self.commodities, commodity)
+
+		Print("Statistics requested for " .. commodity:GetId() .. " " .. commodity:GetName())
+		MarketplaceLib.RequestCommodityInfo(commodity:GetId())
+
 		return commodity
 	end
 end
@@ -38,6 +43,13 @@ end
 function CommodityHandler:ClearCommodities()
 	self.commodityMap = {}
 	self.commodities = {}
+end
+
+function CommodityHandler:RequestCommodityInfo()
+	for key, commodity in pairs(self.commodities) do
+    	Print("Statistics requested for " .. commodity:GetId() .. " " .. commodity:GetName())
+		MarketplaceLib.RequestCommodityInfo(commodity:GetId())
+	end
 end
 
 function CommodityHandler:Serialize()
@@ -49,6 +61,7 @@ function CommodityHandler:Serialize()
 end
 
 function CommodityHandler:Deserialize(commodityIds)
+	Print("???")
 	self:ClearCommodities()
 	for key, value in pairs(commodityIds) do
 		self:AddCommodity(value)
