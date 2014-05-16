@@ -32,7 +32,7 @@ end
 function Supernova:Init()
 	local bHasConfigureFunction = false
 	local strConfigureButtonText = "Supernova"
-	local tDependencies = {"MarketplaceCommodity", "CommodityHandler", "Commodity"} 
+	local tDependencies = {"MarketplaceCommodity", "CommodityHandler", "Commodity", "TradeTicket", "TradeTicketHandler"} 
     Apollo.RegisterAddon(self, bHasConfigureFunction, strConfigureButtonText, tDependencies)
     Apollo.RegisterEventHandler("CommodityInfoResults", "OnCommodityInfoResults", self)
 end
@@ -51,8 +51,11 @@ function Supernova:OnLoad()
 
     Commodity = Apollo.GetPackage("Commodity").tPackage
     CommodityHandler = Apollo.GetPackage("CommodityHandler").tPackage
+    TradeTicketHandler = Apollo.GetPackage("TradeTicketHandler").tPackage
+    TradeTicketHandler.xmlDoc = self.xmlDoc
 
     self.commodityHandler = CommodityHandler:new()
+    self.tradeTicketHandler = TradeTicketHandler:new()
 end
 
 
@@ -115,6 +118,11 @@ function Supernova:OnCancel()
 	self.wndMain:Close() -- hide the window
 end
 
+-- when the a Ticket is closed button is clicked
+function Supernova:OnCloseTicket()
+	Print('Close Ticket invoked')
+end
+
 -- when the Add Commodity button is clicked
 function Supernova:OnAddCommodity( wndHandler, wndControl, eMouseButton )
 	local commodityId = tonumber(wndControl:GetParent():GetName());
@@ -128,8 +136,7 @@ function Supernova:OnAddCommodity( wndHandler, wndControl, eMouseButton )
 end
 
 function Supernova:LaunchTicket( wndHandler, wndControl, eMouseButton )
-	local temp = Apollo.LoadForm(self.xmlDoc, "TradeTicket", nil, self)
-	temp:Invoke()
+	self.tradeTicketHandler:OpenTicket()
 end
 
 
