@@ -54,7 +54,7 @@ function Supernova:OnLoad()
     TradeTicketHandler = Apollo.GetPackage("TradeTicketHandler").tPackage
     TradeTicketHandler.xmlDoc = self.xmlDoc
 
-    self.commodityHandler = CommodityHandler:new()
+    self.commodityHandler = CommodityHandler:new({supernova = self})
     self.tradeTicketHandler = TradeTicketHandler:new()
 end
 
@@ -95,7 +95,7 @@ function Supernova:DrawCommodities()
 		if (wndGrid) then
 			wndGrid:DestroyChildren()
 			for key,value in pairs(self.commodityHandler.commodities) do
-				local row = self:LoadByName("Row", wndGrid , "ExampleText")
+				local row = Apollo.LoadForm(self.xmlDoc , "Row", wndGrid, value)
 				row:FindChild("CommodityName"):SetText(value:GetName())
 				row:FindChild("BuyPrice"):SetText(value.buy1)
 				row:FindChild("SellPrice"):SetText(value.sell1)
@@ -126,8 +126,7 @@ end
 -- when the Add Commodity button is clicked
 function Supernova:OnAddCommodity( wndHandler, wndControl, eMouseButton )
 	local commodityId = tonumber(wndControl:GetParent():GetName());
-	local commodity
-	commodity = self.commodityHandler:AddCommodity(commodityId)	
+	local commodity = self.commodityHandler:AddCommodity(commodityId)	
     Print("Statistics requested for " .. commodity:GetId() .. " " .. commodity:GetName())
 	MarketplaceLib.RequestCommodityInfo(commodity:GetId())
 
@@ -135,10 +134,9 @@ function Supernova:OnAddCommodity( wndHandler, wndControl, eMouseButton )
 	self.wndMain:Invoke()
 end
 
-function Supernova:LaunchTicket( wndHandler, wndControl, eMouseButton )
-	self.tradeTicketHandler:OpenTicket()
+function Supernova:LaunchTicket(commodity)
+	self.tradeTicketHandler:OpenTicket(commodity)
 end
-
 
 -----------------------------------------------------------------------------------------------
 -- Utils

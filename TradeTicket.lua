@@ -5,9 +5,17 @@ function TradeTicket:new(o)
 	setmetatable(o, self)
 	self.__index = self
 
-	self.window = Apollo.LoadForm(TradeTicket.xmlDoc, "TradeTicket", nil, self)
-	self.window:Invoke()
+	local window = Apollo.LoadForm(TradeTicket.xmlDoc, "TradeTicket", nil, o)
+	o.window = window
+	o:SetTextFields()
 	return o
+end
+
+function TradeTicket:SetTextFields()
+	self.window:FindChild("CommodityName"):SetText(self.commodity:GetName())
+	self.window:FindChild("Top1Value"):SetText(self.commodity.buy1)
+	self.window:FindChild("Top10Value"):SetText(self.commodity.buy10)
+	self.window:FindChild("Top50Value"):SetText(self.commodity.buy50)
 end
 
 function TradeTicket:OnCloseTicket()

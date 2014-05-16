@@ -28,7 +28,7 @@ function CommodityHandler:AddCommodity(commodityId)
 	if self.commodityMap[commodityId] then
 		return self.commodityMap[commodityId]
 	else
-		local commodity = Commodity:new {id = commodityId}
+		local commodity = Commodity:new {supernova = self.supernova, id = commodityId}
 		self.commodityMap[commodityId] = commodity
 		table.insert(self.commodities, commodity)
 		return commodity

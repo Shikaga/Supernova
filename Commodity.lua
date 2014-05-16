@@ -24,13 +24,16 @@ function Commodity:GetName()
 end
 
 function Commodity:UpdateTStats(tStats)
-	self.sell1 = tStats.arSellOrderPrices[1].monPrice:GetAmount()
-	self.sell10 = tStats.arSellOrderPrices[2].monPrice:GetAmount()
-	self.sell50 = tStats.arSellOrderPrices[3].monPrice:GetAmount()
-    self.buy1 = tStats.arBuyOrderPrices[1].monPrice:GetAmount()
-    self.buy10 = tStats.arBuyOrderPrices[2].monPrice:GetAmount()
-    self.buy50 = tStats.arBuyOrderPrices[3].monPrice:GetAmount()
-	
+	self.sell1 = tStats.arBuyOrderPrices[1].monPrice:GetAmount()
+	self.sell10 = tStats.arBuyOrderPrices[2].monPrice:GetAmount()
+	self.sell50 = tStats.arBuyOrderPrices[3].monPrice:GetAmount()
+    self.buy1 = tStats.arSellOrderPrices[1].monPrice:GetAmount()
+    self.buy10 = tStats.arSellOrderPrices[2].monPrice:GetAmount()
+    self.buy50 = tStats.arSellOrderPrices[3].monPrice:GetAmount()
+end
+
+function Commodity:LaunchTicket( wndHandler, wndControl, eMouseButton )
+	self.supernova:LaunchTicket(self)
 end
 
 Apollo.RegisterPackage(Commodity, "Commodity", 1, {})

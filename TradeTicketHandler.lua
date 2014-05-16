@@ -12,8 +12,8 @@ function TradeTicketHandler:new(o)
 	return o
 end
 
-function TradeTicketHandler:OpenTicket()
-	local ticket = TradeTicket:new()
+function TradeTicketHandler:OpenTicket(commodity)
+	local ticket = TradeTicket:new({commodity = commodity})
 end
 
 Apollo.RegisterPackage(TradeTicketHandler, "TradeTicketHandler", 1, {})
