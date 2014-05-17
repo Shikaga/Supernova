@@ -1,0 +1,17 @@
+orderSource Functions:
+
+Cancel
+GetExpirationTime
+GetPricePerUnit
+IsForceImmediate
+IsPosted
+SetPrices
+IsBuy
+Post
+SetCount
+GetCount
+GetReservePricePerUnit
+CanPost
+SetForceImmediate
+GetItem
+GetListTime
