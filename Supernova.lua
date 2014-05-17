@@ -154,7 +154,7 @@ end
 function Supernova:PrintMembers(o)
 	Print('Printing Members')
 	Print('----')
-	for key,value in pairs(o) do
+	for key,value in pairs(getmetatable(o)) do
 	    Print("found member " .. key);
 	end
 	Print('----')

@@ -49,6 +49,12 @@ end
 
 function TradeTicket:SetIcon()
 	self.window:FindChild("TradeWindow"):FindChild("CommodityItem"):SetSprite(self.commodity:GetIcon())
+	local tItem  = self.commodity:GetItem()
+	local tooltip = Tooltip.GetItemTooltipForm(self, 
+	self.window:FindChild("TradeWindow"):FindChild("CommodityItem"), 
+	tItem, 
+	{bPrimary = true, bSelling = false, itemCompare = tItem:GetEquippedItemForItemType()}
+	)
 end
 
 function TradeTicket:OnPostCommodityOrderResult(eAuctionPostResult, orderSource, nActualCost)
