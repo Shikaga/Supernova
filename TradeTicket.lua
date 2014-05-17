@@ -22,6 +22,7 @@ function TradeTicket:Init()
 	self.price = 0
 
 	self:SetTextFields()
+	self:SetIcon()
 
 	self:Validate()
 end
@@ -43,6 +44,12 @@ function TradeTicket:SetSellPrices()
 	self.window:FindChild("Top50Value"):SetText(self.commodity.sell50)
 end
 
+function TradeTicket:SetIcon()
+	Print("Trying to set Icon")
+	self.window:FindChild("TradeWindow"):FindChild("CommodityItem"):SetSprite(self.commodity:GetIcon())
+	Print("Set Successful")
+end
+
 function TradeTicket:OnListInputNumberChanged()
 	self.volume = self.window:FindChild("TradeWindow"):FindChild("ListInputNumber"):GetText()
 	self:Validate()
@@ -54,11 +61,18 @@ function TradeTicket:OnListInputPriceAmountChanged()
 end
 
 function TradeTicket:OnListInputNumberDownBtn()
-	Print("Down")
+	self.volume = math.max(0, self.volume - 1)
+	self:UpdateVolumeField()
 end
 
 function TradeTicket:OnListInputNumberUpBtn()
-	Print("Up")
+	self.volume = self.volume + 1
+	self:UpdateVolumeField()
+end
+
+function TradeTicket:UpdateVolumeField()
+	self.window:FindChild("TradeWindow"):FindChild("ListInputNumber"):SetText(self.volume)
+	self:Validate()
 end
 
 function TradeTicket:OnCloseTicket()

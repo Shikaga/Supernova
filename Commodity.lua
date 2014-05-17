@@ -23,6 +23,10 @@ function Commodity:GetName()
 	return Item.GetDataFromId(self.id):GetName() or "Undefined"
 end
 
+function Commodity:GetIcon()
+	return Item.GetDataFromId(self.id):GetIcon() or "Undefined"
+end
+
 function Commodity:UpdateTStats(tStats)
 	self.sell1 = tStats.arBuyOrderPrices[1].monPrice:GetAmount()
 	self.sell10 = tStats.arBuyOrderPrices[2].monPrice:GetAmount()
