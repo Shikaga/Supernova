@@ -79,7 +79,7 @@ function Supernova:AddAddCommodityButtons()
                 local x = Apollo.LoadForm(self.xmlDoc, "AddButton", child, self)
             end
         end
-        Apollo.LoadForm(self.xmlDoc , "WatchlistButton", marketplaceWindow, self)
+        Apollo.LoadForm(self.xmlDoc , "CommodityButtons", marketplaceWindow, self)
     end
 end
 
