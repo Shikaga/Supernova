@@ -4,6 +4,7 @@
     <Form Name="Supernova.xml"/>
     <Script Name="CommodityHandler.lua"/>
     <Script Name="Commodity.lua"/>
+    <Script Name="Watchlist.lua"/>
     <Script Name="TradeTicket.lua"/>
     <Script Name="TradeTicketHandler.lua"/>
 </Addon>

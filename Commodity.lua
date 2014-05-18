@@ -6,12 +6,12 @@ function Commodity:new(o)
 	self.__index = self
 
 	self.item = Item.GetDataFromId(o.id)
-	self.buy1 = 'undefined'
-	self.buy10 = 'undefined'
-	self.buy50 = 'undefined'
-	self.sell1 = 'undefined'
-	self.sell10 = 'undefined'
-	self.sell50 = 'undefined'
+	self.buy1 = '--'
+	self.buy10 = '--'
+	self.buy50 = '--'
+	self.sell1 = '--'
+	self.sell10 = '--'
+	self.sell50 = '--'
 	return o
 end
 
