@@ -38,6 +38,18 @@ function CommodityHandler:AddCommodity(commodityId)
 	end
 end
 
+function CommodityHandler:RemoveCommodity(commodity)
+	if self.commodityMap[commodity:GetId()] then
+		self.commodityMap[commodity:GetId()] = nil
+		for key,value in pairs(self.commodities) do
+			if value == commodity then
+				self.commodities[key] = nil
+			end
+		end
+	end
+	Print("Z")
+end
+
 function CommodityHandler:ClearCommodities()
 	self.commodityMap = {}
 	self.commodities = {}

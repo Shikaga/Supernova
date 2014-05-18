@@ -40,8 +40,4 @@ function Commodity:UpdateTStats(tStats)
     self.buy50 = tStats.arSellOrderPrices[3].monPrice:GetAmount()
 end
 
-function Commodity:LaunchTicket( wndHandler, wndControl, eMouseButton )
-	self.supernova:LaunchTicket(self)
-end
-
 Apollo.RegisterPackage(Commodity, "Commodity", 1, {})

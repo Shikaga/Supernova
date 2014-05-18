@@ -5,6 +5,7 @@
     <Script Name="CommodityHandler.lua"/>
     <Script Name="Commodity.lua"/>
     <Script Name="Watchlist.lua"/>
+    <Script Name="WatchlistRow.lua"/>
     <Script Name="TradeTicket.lua"/>
     <Script Name="TradeTicketHandler.lua"/>
 </Addon>

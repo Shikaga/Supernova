@@ -6,12 +6,12 @@ function Watchlist:new(o)
 	self.__index = self
 
 	o:Init()
-	o.x = "NPOE"
 	return o
 end
 
 function Watchlist:Init()
 	CommodityHandler = Apollo.GetPackage("CommodityHandler").tPackage
+	WatchlistRow = Apollo.GetPackage("WatchlistRow").tPackage
     self.commodityHandler = CommodityHandler:new({supernova = self.supernova})
 
     Apollo.RegisterEventHandler("CommodityInfoResults", "OnCommodityInfoResults", self)
@@ -32,34 +32,36 @@ end
 
 function Watchlist:DrawCommodities()
 	if (self.wndMain) then
-		local wndGrid = self.wndMain:FindChild("Grid")
+		local wndGrid = self:GetGrid()
 		if (wndGrid) then
 			wndGrid:DestroyChildren()
 			for key,value in pairs(self.commodityHandler.commodities) do
-				local row = Apollo.LoadForm(self.supernova.xmlDoc , "Row", wndGrid, value)
-				row:FindChild("CommodityName"):SetText(value:GetName())
-				row:FindChild("BuyPrice"):SetText(value.buy1)
-				row:FindChild("SellPrice"):SetText(value.sell1)
+				local row = WatchlistRow:new({watchlist = self, supernova = self.supernova, commodity = value})
 			end
 			wndGrid:ArrangeChildrenVert(0)
 		end
 	end
 end
 
-function Watchlist:OpenWatchlist()
-	--self.commodityHandler:RequestCommodityInfo()
-	Print(self.x)
-	Print("OpenWatchlist")
-	self:DrawCommodities()
-		self.wndMain:Invoke()
+function Watchlist:GetGrid()
+	return self.wndMain:FindChild("Grid")
 end
 
--- when the OK button is clicked
+function Watchlist:RemoveCommodity(commodity)
+	self.commodityHandler:RemoveCommodity(commodity)
+	self:DrawCommodities()
+end
+
+function Watchlist:OpenWatchlist()
+	self.commodityHandler:RequestCommodityInfo()
+	self:DrawCommodities()
+	self.wndMain:Invoke()
+end
+
 function Watchlist:OnOK()
 	self.wndMain:Close() -- hide the window
 end
 
--- when the Cancel button is clicked
 function Watchlist:OnCancel()
 	self.wndMain:Close() -- hide the window
 end

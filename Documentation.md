@@ -15,3 +15,21 @@ CanPost
 SetForceImmediate
 GetItem
 GetListTime
+
+item Functions:
+GetDurablity
+GetRepairCost
+IsDestroyOnZone
+GetItemCategory
+GetProcSpell
+GetActivateSpell
+GetEquippedCount
+GetGlobalCatalystInfo
+HasRestockingFee
+IsEquippable
+IsCommodity
+GetSlotName
+GetEquipSpell
+GetItemId
+GetRequiredFaction
+GetStackCount
