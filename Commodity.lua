@@ -12,6 +12,8 @@ function Commodity:new(o)
 	self.sell1 = '--'
 	self.sell10 = '--'
 	self.sell50 = '--'
+	self.sellOrderCount = '--'
+	self.buyOrderCount = '--'
 	return o
 end
 
@@ -38,6 +40,8 @@ function Commodity:UpdateTStats(tStats)
     self.buy1 = tStats.arSellOrderPrices[1].monPrice:GetAmount()
     self.buy10 = tStats.arSellOrderPrices[2].monPrice:GetAmount()
     self.buy50 = tStats.arSellOrderPrices[3].monPrice:GetAmount()
+    self.sellOrderCount = tStats.nSellOrderCount
+    self.buyOrderCount = tStats.nBuyOrderCount
 end
 
 Apollo.RegisterPackage(Commodity, "Commodity", 1, {})

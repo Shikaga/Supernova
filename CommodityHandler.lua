@@ -33,7 +33,6 @@ function CommodityHandler:AddCommodity(commodityId)
 		table.insert(self.commodities, commodity)
 
 		MarketplaceLib.RequestCommodityInfo(commodity:GetId())
-
 		return commodity
 	end
 end
@@ -47,7 +46,6 @@ function CommodityHandler:RemoveCommodity(commodity)
 			end
 		end
 	end
-	Print("Z")
 end
 
 function CommodityHandler:ClearCommodities()

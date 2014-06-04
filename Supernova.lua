@@ -31,7 +31,7 @@ end
 function Supernova:Init()
 	local bHasConfigureFunction = false
 	local strConfigureButtonText = "Supernova"
-	local tDependencies = {"MarketplaceCommodity", "CommodityHandler", "Commodity", "TradeTicket", "TradeTicketHandler"} 
+	local tDependencies = {"MarketplaceCommodity", "CommodityHandler", "Commodity", "TradeTicket", "TradeTicketHandler", "ListingsHandler"} 
     Apollo.RegisterAddon(self, bHasConfigureFunction, strConfigureButtonText, tDependencies)
 end
  
@@ -48,10 +48,15 @@ function Supernova:OnLoad()
 
     TradeTicketHandler = Apollo.GetPackage("TradeTicketHandler").tPackage
     Watchlist = Apollo.GetPackage("Watchlist").tPackage
+    ListingsHandler = Apollo.GetPackage("ListingsHandler").tPackage
+
     TradeTicketHandler.xmlDoc = self.xmlDoc
+    ListingsHandler.xmlDoc = self.xmlDoc
 
     self.watchlist = Watchlist:new({supernova = self})
+    self.listingsHandler = ListingsHandler:new({supernova = self})
     self.tradeTicketHandler = TradeTicketHandler:new()
+    Print("ZZ")
 end
 
 function Supernova:OnSave(eLevel)
@@ -66,9 +71,11 @@ end
 
 function Supernova:InitializeHooks()
 	self:AddAddCommodityButtons()
+	self:AddTicketButtonsToMarketplaceListing()
 end
 
 function Supernova:AddAddCommodityButtons()
+	Print("AAA")
 	local fnOldHeaderBtnToggle = self.MarketplaceCommodity.OnHeaderBtnToggle
     self.MarketplaceCommodity.OnHeaderBtnToggle = function(tMarketPlaceCommodity)
 		marketplaceWindow  = tMarketPlaceCommodity.wndMain
@@ -81,6 +88,10 @@ function Supernova:AddAddCommodityButtons()
         end
         Apollo.LoadForm(self.xmlDoc , "CommodityButtons", marketplaceWindow, self)
     end
+end
+
+function Supernova:AddTicketButtonsToMarketplaceListing()
+	
 end
 
 -----------------------------------------------------------------------------------------------

@@ -39,12 +39,14 @@ function TradeTicket:SetBuyPrices()
 	self.window:FindChild("Top1Value"):SetText(self.commodity.buy1)
 	self.window:FindChild("Top10Value"):SetText(self.commodity.buy10)
 	self.window:FindChild("Top50Value"):SetText(self.commodity.buy50)
+	self.window:FindChild("OrderCount"):SetText(self.commodity.sellOrderCount)
 end
 
 function TradeTicket:SetSellPrices()
 	self.window:FindChild("Top1Value"):SetText(self.commodity.sell1)
 	self.window:FindChild("Top10Value"):SetText(self.commodity.sell10)
 	self.window:FindChild("Top50Value"):SetText(self.commodity.sell50)
+	self.window:FindChild("OrderCount"):SetText(self.commodity.buyOrderCount)
 end
 
 function TradeTicket:SetIcon()
@@ -114,21 +116,7 @@ function TradeTicket:OnCloseTicket()
 end
 
 function TradeTicket:OnExecuteTrade()
-	Print("Trade Attempt!")
-	
-	local order
-	if self.buySell == BUY then
-		order = CommodityOrder.newBuyOrder(self.commodity:GetId())
-		order:SetForceImmediate(false) -- If false then a Order will be created, rather than booking at market
-	else
-		order = CommodityOrder.newSellOrder(self.commodity:GetId())
-		order:SetForceImmediate(false) -- If false then a Order will be created, rather than booking at market
-	end
 
-	local volume = tonumber(self.window:FindChild("TradeWindow"):FindChild("ListInputNumber"):GetText())
-	order:SetCount(volume)
-	order:SetPrices(self.window:FindChild("TradeWindow"):FindChild("ListInputPrice"):GetCurrency())
-	order:Post()
 end
 
 function TradeTicket:UpdateVolumeField()
@@ -149,11 +137,38 @@ function TradeTicket:SetConfirmationString(string)
 end
 
 function TradeTicket:EnableExecuteButton()
-	self.window:FindChild("ExecuteButton"):Enable(true)
+	local executeButton = self.window:FindChild("ExecuteButton")
+	local order
+	if self.buySell == BUY then
+		order = CommodityOrder.newBuyOrder(self.commodity:GetId())
+		order:SetForceImmediate(false) -- If false then a Order will be created, rather than booking at market
+	else
+		order = CommodityOrder.newSellOrder(self.commodity:GetId())
+		order:SetForceImmediate(false) -- If false then a Order will be created, rather than booking at market
+	end
+
+	local volume = tonumber(self.window:FindChild("TradeWindow"):FindChild("ListInputNumber"):GetText())
+	order:SetCount(volume)
+	order:SetPrices(self.window:FindChild("TradeWindow"):FindChild("ListInputPrice"):GetCurrency())
+
+	if order:CanPost() then
+		local execBtn = self.window:FindChild("Button")
+
+		execBtn:SetActionData(GameLib.CodeEnumConfirmButtonType.MarketplaceCommoditiesSubmit, order)
+		executeButton:Enable(true)
+		local totalPrice = order:GetCount() * order:GetPricePerUnit():GetAmount() + order:GetTax():GetAmount()
+		local text = "You are going to " .. self:BuyOrSellString() .. " " .. order:GetCount() .. " [" .. self.commodity:GetName() .. "] for " .. order:GetPricePerUnit():GetAmount() .. "c each plus a fee of " .. order:GetTax():GetAmount() .. "c for total price of " .. totalPrice .. "c"
+		self.window:FindChild("TradeWindow"):FindChild("SummaryText"):SetText(text)
+	else
+
+	end
 end
 
 function TradeTicket:DisableExecuteButton()
 	self.window:FindChild("ExecuteButton"):Enable(false)
+
+	local text = "Set a valid price and volume"
+	self.window:FindChild("TradeWindow"):FindChild("SummaryText"):SetText(text)
 end
 
 function TradeTicket:OnBuySellToggle()
@@ -170,15 +185,16 @@ function TradeTicket:OnBuySellToggle()
 end
 
 function TradeTicket:Validate()
-	local totalPrice = self.price * self.volume
-	local text = "Set a valid price and volume"
+	local orderPrice = self.price * self.volume
+	local orderFee = math.max(orderPrice * MarketplaceLib.kfCommodityBuyOrderTaxMultiplier, MarketplaceLib.knCommodityBuyOrderTaxMinimum)
+	local totalPrice = orderPrice + orderFee
+
 	if totalPrice > 0 then
-		text = "You are going to " .. self:BuyOrSellString() .. " " .. self.volume .. " [" .. self.commodity:GetName() .. "] for " .. self.price .. "c each, for total price of " .. totalPrice .. "c"
 		self:EnableExecuteButton()
 	else
 		self:DisableExecuteButton()
 	end
-	self.window:FindChild("TradeWindow"):FindChild("SummaryText"):SetText(text)
+
 end
 
 function TradeTicket:BuyOrSellString()

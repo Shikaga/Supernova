@@ -4,6 +4,7 @@ function Watchlist:new(o)
  	o = o or {}   -- create object if user does not provide one
 	setmetatable(o, self)
 	self.__index = self
+	self.dirty = false
 
 	o:Init()
 	return o
@@ -15,7 +16,9 @@ function Watchlist:Init()
     self.commodityHandler = CommodityHandler:new({supernova = self.supernova})
 
     Apollo.RegisterEventHandler("CommodityInfoResults", "OnCommodityInfoResults", self)
-	self.wndMain = Apollo.LoadForm(self.supernova.xmlDoc, "HelloWorldForm", nil, self)
+	self.wndMain = Apollo.LoadForm(self.supernova.xmlDoc, "Watchlist", nil, self)
+
+	Apollo.RegisterTimerHandler("OneSecTimer", "OnTimer", self)
 end
 
 function Watchlist:AddCommodityById( commodityId )
@@ -27,7 +30,7 @@ end
 
 function Watchlist:OnCommodityInfoResults(nItemId, tStats, tOrders)
 	self.commodityHandler:OnCommodityInfoResults(nItemId, tStats, tOrders)
-	self:DrawCommodities()
+	self.dirty = true
 end
 
 function Watchlist:DrawCommodities()
@@ -56,6 +59,17 @@ function Watchlist:OpenWatchlist()
 	self.commodityHandler:RequestCommodityInfo()
 	self:DrawCommodities()
 	self.wndMain:Invoke()
+end
+
+function Watchlist:OnRefreshClicked()
+	self.commodityHandler:RequestCommodityInfo()
+end
+
+function Watchlist:OnTimer()
+	if self.dirty then
+		self.dirty = false
+		self:DrawCommodities()
+	end
 end
 
 function Watchlist:OnOK()
