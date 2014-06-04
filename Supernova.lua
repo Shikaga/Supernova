@@ -42,6 +42,7 @@ end
 function Supernova:OnLoad()
 	TradeTicketHandler = Apollo.GetPackage("TradeTicketHandler").tPackage
     Watchlist = Apollo.GetPackage("Watchlist").tPackage
+    IntegratedWatchlist = Apollo.GetPackage("IntegratedWatchlist").tPackage
     ListingsHandler = Apollo.GetPackage("ListingsHandler").tPackage
     CommodityHandler = Apollo.GetPackage("CommodityHandler").tPackage
 
@@ -56,6 +57,7 @@ function Supernova:OnLoad()
     self.commodityHandler = CommodityHandler:new({supernova = self})
 
     self.watchlist = Watchlist:new({supernova = self, commodityHandler = self.commodityHandler})
+    self.integratedWatchlist = IntegratedWatchlist:new({supernova = self, commodityHandler = self.commodityHandler})
     self.listingsHandler = ListingsHandler:new({supernova = self})
     self.tradeTicketHandler = TradeTicketHandler:new()
     Print("ZZ")
@@ -100,9 +102,12 @@ end
 -- HelloWorldForm Functions
 -----------------------------------------------------------------------------------------------
 
--- when the a Ticket is closed button is clicked
 function Supernova:OnToggleWatchlist()
 	self.watchlist:OpenWatchlist()
+end
+
+function Supernova:OnToggleIntegratedWatchlist()
+	self.integratedWatchlist:Open()
 end
 
 -- when the Add Commodity button is clicked
