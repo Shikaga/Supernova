@@ -40,20 +40,22 @@ end
 -- HelloWorld OnLoad
 -----------------------------------------------------------------------------------------------
 function Supernova:OnLoad()
-    -- load our form file
+	TradeTicketHandler = Apollo.GetPackage("TradeTicketHandler").tPackage
+    Watchlist = Apollo.GetPackage("Watchlist").tPackage
+    ListingsHandler = Apollo.GetPackage("ListingsHandler").tPackage
+    CommodityHandler = Apollo.GetPackage("CommodityHandler").tPackage
+
 	self.xmlDoc = XmlDoc.CreateFromFile("Supernova.xml")
 				
 	self.MarketplaceCommodity = Apollo.GetAddon("MarketplaceCommodity")
     self:InitializeHooks()
 
-    TradeTicketHandler = Apollo.GetPackage("TradeTicketHandler").tPackage
-    Watchlist = Apollo.GetPackage("Watchlist").tPackage
-    ListingsHandler = Apollo.GetPackage("ListingsHandler").tPackage
-
     TradeTicketHandler.xmlDoc = self.xmlDoc
     ListingsHandler.xmlDoc = self.xmlDoc
 
-    self.watchlist = Watchlist:new({supernova = self})
+    self.commodityHandler = CommodityHandler:new({supernova = self})
+
+    self.watchlist = Watchlist:new({supernova = self, commodityHandler = self.commodityHandler})
     self.listingsHandler = ListingsHandler:new({supernova = self})
     self.tradeTicketHandler = TradeTicketHandler:new()
     Print("ZZ")
@@ -61,12 +63,12 @@ end
 
 function Supernova:OnSave(eLevel)
 	local save = {}
-	save.watchlist = self.watchlist:Serialize()
+	save.watchlist = self.commodityHandler:Serialize()
 	return save
 end
 
 function Supernova:OnRestore(eLevel, tData)
-	self.watchlist:Deserialize(tData.watchlist)
+	self.commodityHandler:Deserialize(tData.watchlist)
 end
 
 function Supernova:InitializeHooks()

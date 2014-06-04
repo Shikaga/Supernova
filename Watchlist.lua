@@ -11,9 +11,7 @@ function Watchlist:new(o)
 end
 
 function Watchlist:Init()
-	CommodityHandler = Apollo.GetPackage("CommodityHandler").tPackage
 	WatchlistRow = Apollo.GetPackage("WatchlistRow").tPackage
-    self.commodityHandler = CommodityHandler:new({supernova = self.supernova})
 
     Apollo.RegisterEventHandler("CommodityInfoResults", "OnCommodityInfoResults", self)
 	self.wndMain = Apollo.LoadForm(self.supernova.xmlDoc, "Watchlist", nil, self)
@@ -79,15 +77,5 @@ end
 function Watchlist:OnCancel()
 	self.wndMain:Close() -- hide the window
 end
-
-function Watchlist:Serialize()
-	return self.commodityHandler:Serialize()
-end
-
-function Watchlist:Deserialize(data)
-	self.commodityHandler:Deserialize(data)
-end
-
-
 
 Apollo.RegisterPackage(Watchlist, "Watchlist", 1, {})
