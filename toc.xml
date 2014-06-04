@@ -8,7 +8,9 @@
     <Script Name="WatchlistRow.lua"/>
     <Script Name="IntegratedWatchlist.lua"/>
     <Script Name="IntegratedWatchlistRow.lua"/>
+    <Script Name="IntegratedWatchlistOrderRow.lua"/>
     <Script Name="TradeTicket.lua"/>
     <Script Name="TradeTicketHandler.lua"/>
-    <Script Name="ListingsHandler.lua"/>
+    <Script Name="ListingPriceHandler.lua"/>
+    <Script Name="ListingHandler.lua"/>
 </Addon>

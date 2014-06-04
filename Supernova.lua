@@ -31,7 +31,7 @@ end
 function Supernova:Init()
 	local bHasConfigureFunction = false
 	local strConfigureButtonText = "Supernova"
-	local tDependencies = {"MarketplaceCommodity", "CommodityHandler", "Commodity", "TradeTicket", "TradeTicketHandler", "ListingsHandler"} 
+	local tDependencies = {"MarketplaceCommodity", "CommodityHandler", "Commodity", "TradeTicket", "TradeTicketHandler", "ListingPriceHandler"} 
     Apollo.RegisterAddon(self, bHasConfigureFunction, strConfigureButtonText, tDependencies)
 end
  
@@ -43,8 +43,9 @@ function Supernova:OnLoad()
 	TradeTicketHandler = Apollo.GetPackage("TradeTicketHandler").tPackage
     Watchlist = Apollo.GetPackage("Watchlist").tPackage
     IntegratedWatchlist = Apollo.GetPackage("IntegratedWatchlist").tPackage
-    ListingsHandler = Apollo.GetPackage("ListingsHandler").tPackage
+    ListingPriceHandler = Apollo.GetPackage("ListingPriceHandler").tPackage
     CommodityHandler = Apollo.GetPackage("CommodityHandler").tPackage
+    ListingHandler = Apollo.GetPackage("ListingHandler").tPackage
 
 	self.xmlDoc = XmlDoc.CreateFromFile("Supernova.xml")
 				
@@ -52,13 +53,14 @@ function Supernova:OnLoad()
     self:InitializeHooks()
 
     TradeTicketHandler.xmlDoc = self.xmlDoc
-    ListingsHandler.xmlDoc = self.xmlDoc
+    ListingPriceHandler.xmlDoc = self.xmlDoc
 
     self.commodityHandler = CommodityHandler:new({supernova = self})
+    self.listingHandler = ListingHandler:new({supernova = self})
 
     self.watchlist = Watchlist:new({supernova = self, commodityHandler = self.commodityHandler})
-    self.integratedWatchlist = IntegratedWatchlist:new({supernova = self, commodityHandler = self.commodityHandler})
-    self.listingsHandler = ListingsHandler:new({supernova = self})
+    self.integratedWatchlist = IntegratedWatchlist:new({supernova = self, commodityHandler = self.commodityHandler, listingHandler = self.listingHandler})
+    self.ListingPriceHandler = ListingPriceHandler:new({supernova = self})
     self.tradeTicketHandler = TradeTicketHandler:new()
     Print("ZZ")
 end

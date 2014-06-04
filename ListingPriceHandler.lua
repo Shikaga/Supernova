@@ -12,9 +12,9 @@ function ListingHandlerRow:LaunchTicket()
 end
 
 
-local ListingsHandler = {}
+local ListingPriceHandler = {}
 
-function ListingsHandler:new(o)
+function ListingPriceHandler:new(o)
  	o = o or {}   -- create object if user does not provide one
 	setmetatable(o, self)
 	self.__index = self
@@ -26,7 +26,7 @@ function ListingsHandler:new(o)
 	return o
 end
 
-function ListingsHandler:Init()
+function ListingPriceHandler:Init()
 	--local ticket = TradeTicket:new({commodity = commodity})
 	local CommodityHandler = Apollo.GetPackage("CommodityHandler").tPackage
     self.commodityHandler = CommodityHandler:new({supernova = self.supernova})
@@ -47,19 +47,19 @@ function ListingsHandler:Init()
 	end
 end
 
-function ListingsHandler:AddCommodity(wnd, commodityId)
+function ListingPriceHandler:AddCommodity(wnd, commodityId)
 	local commodity = self.commodityHandler:AddCommodity(commodityId)
 	self.commodityHandler:RequestCommodityInfo()
 	return commodity
 end
 
 
-function ListingsHandler:OnCommodityInfoResults(nItemId, tStats, tOrders)
+function ListingPriceHandler:OnCommodityInfoResults(nItemId, tStats, tOrders)
 	self.commodityHandler:OnCommodityInfoResults(nItemId, tStats, tOrders)
 	self:UpdateCommodities()
 end
 
-function ListingsHandler:UpdateCommodities()
+function ListingPriceHandler:UpdateCommodities()
 	for _,value in pairs(self.commodityHandler.commodities) do
 		local listingWnd = self.listingWindowMap[value:GetId()]
 		listingWnd:FindChild("SellPrice"):SetText(value.sell1)
@@ -67,4 +67,4 @@ function ListingsHandler:UpdateCommodities()
 	end
 end
 
-Apollo.RegisterPackage(ListingsHandler, "ListingsHandler", 1, {})
+Apollo.RegisterPackage(ListingPriceHandler, "ListingPriceHandler", 1, {})

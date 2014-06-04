@@ -4,14 +4,15 @@ function IntegratedWatchlist:new(o)
  	o = o or {}   -- create object if user does not provide one
 	setmetatable(o, self)
 	self.__index = self
-	self.dirty = false
-
 	o:Init()
 	return o
 end
 
 function IntegratedWatchlist:Init()
+	self.dirty = false
+
 	IntegratedWatchlistRow = Apollo.GetPackage("IntegratedWatchlistRow").tPackage
+	IntegratedWatchlistOrderRow = Apollo.GetPackage("IntegratedWatchlistOrderRow").tPackage
 
     Apollo.RegisterEventHandler("CommodityInfoResults", "OnCommodityInfoResults", self)
 	self.wndMain = Apollo.LoadForm(self.supernova.xmlDoc, "IntegratedWatchlist", nil, self)
@@ -36,6 +37,10 @@ function IntegratedWatchlist:DrawCommodities()
 			wndGrid:DestroyChildren()
 			for key,value in pairs(self.commodityHandler.commodities) do
 				local row = IntegratedWatchlistRow:new({watchlist = self, supernova = self.supernova, commodity = value})
+				local listings = self.listingHandler:GetListingsById(value:GetId())
+				for _,listing in pairs(listings) do
+					local orderRow = IntegratedWatchlistOrderRow:new({watchlist = self, supernova = self.supernova, listing = listing})
+				end
 			end
 			wndGrid:ArrangeChildrenVert(0)
 		end
@@ -53,6 +58,7 @@ end
 function IntegratedWatchlist:OnTimer()
 	if self.dirty then
 		self.dirty = false
+
 		self:DrawCommodities()
 	end
 end
