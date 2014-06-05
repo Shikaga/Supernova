@@ -14,6 +14,17 @@ function IntegratedWatchlistRow:Init()
 	rowWindow:FindChild("CommodityName"):SetText(self.commodity:GetName())
 	rowWindow:FindChild("BuyPrice"):SetText(self.commodity.buy1)
 	rowWindow:FindChild("SellPrice"):SetText(self.commodity.sell1)
+	self:SetIcon(rowWindow)
+end
+
+function IntegratedWatchlistRow:SetIcon(window)
+	window:FindChild("CommodityItem"):SetSprite(self.commodity:GetIcon())
+	local tItem  = self.commodity:GetItem()
+	local tooltip = Tooltip.GetItemTooltipForm(self, 
+	window:FindChild("CommodityItem"), 
+	tItem, 
+	{bPrimary = true, bSelling = false, itemCompare = tItem:GetEquippedItemForItemType()}
+	)
 end
 
 function IntegratedWatchlistRow:OnLaunchTicket( wndHandler, wndControl, eMouseButton )

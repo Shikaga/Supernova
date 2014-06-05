@@ -60,6 +60,8 @@ function TradeTicket:SetIcon()
 end
 
 function TradeTicket:OnPostCommodityOrderResult(eAuctionPostResult, orderSource, nActualCost)
+	MarketplaceLib.RequestOwnedCommodityOrders() 
+
 	local isBuy = orderSource:IsBuy()
 	local isLimitOrder = false
 

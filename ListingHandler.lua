@@ -15,7 +15,11 @@ function ListingHandler:Init()
 	Apollo.RegisterEventHandler("OwnedCommodityOrders", "OnOwnedCommodityOrders", self)
 	--Apollo.RegisterEventHandler("OwnedItemAuctions", "OnOwnedItemAuctions", self)
 	
-	MarketplaceLib.RequestOwnedCommodityOrders() -- Leads to OwnedCommodityOrders
+	self:Refresh()
+end
+
+function ListingHandler:Refresh()
+	MarketplaceLib.RequestOwnedCommodityOrders() 
 end
 
 function ListingHandler:OnOwnedCommodityOrders(tOrders)
@@ -23,6 +27,7 @@ function ListingHandler:OnOwnedCommodityOrders(tOrders)
 
 	for nIdx, tCurrOrder in pairs(tOrders) do
 		local listing = {
+			order = tCurrOrder,
 			id = tCurrOrder:GetItem():GetItemId(),
 			name = tCurrOrder:GetItem():GetName(),
 			count = tCurrOrder:GetCount(),

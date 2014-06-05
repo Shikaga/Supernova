@@ -17,9 +17,28 @@ function IntegratedWatchlistOrderRow:Init()
 	if (self.listing.isBuy) then
 		--rowWindow:FindChild("ItemBuySell"):SetText("BUY")
 		rowWindow:FindChild("SellPrice"):SetText(self.listing.pricePerUnit)
+			rowWindow:FindChild("BuySell"):SetText("Buy Order")
+		if self.commodity.sell1 == "--" then
+
+		else
+			if self.listing.pricePerUnit >= self.commodity.sell1 then
+				rowWindow:FindChild("SellPrice"):SetTextColor("green")
+			else
+				rowWindow:FindChild("SellPrice"):SetTextColor("red")
+			end
+		end
 	else
-		--rowWindow:FindChild("ItemBuySell"):SetText("SELL")
-		rowWindow:FindChild("BuyPrice"):SetText(self.listing.pricePerUnit)
+		if self.commodity.buy1 == "--" then
+
+		else
+			rowWindow:FindChild("BuyPrice"):SetText(self.listing.pricePerUnit)
+			rowWindow:FindChild("BuySell"):SetText("Sell Order")
+			if self.listing.pricePerUnit <= self.commodity.buy1 then
+				rowWindow:FindChild("BuyPrice"):SetTextColor("green")
+			else
+				rowWindow:FindChild("BuyPrice"):SetTextColor("red")
+			end
+		end
 	end
 end
 
@@ -29,6 +48,11 @@ end
 
 function IntegratedWatchlistOrderRow:OnCloseButtonClicked(wndHandler, wndControl, eMouseButton )
 	self.watchlist:RemoveCommodity(self.commodity)
+end
+
+function IntegratedWatchlistOrderRow:OnCancel(wndHandler, wndControl, eMouseButton )
+	self.listing.order:Cancel()
+	MarketplaceLib.RequestOwnedCommodityOrders() 
 end
 
 Apollo.RegisterPackage(IntegratedWatchlistOrderRow, "IntegratedWatchlistOrderRow", 1, {})

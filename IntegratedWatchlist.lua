@@ -15,13 +15,20 @@ function IntegratedWatchlist:Init()
 	IntegratedWatchlistOrderRow = Apollo.GetPackage("IntegratedWatchlistOrderRow").tPackage
 
     Apollo.RegisterEventHandler("CommodityInfoResults", "OnCommodityInfoResults", self)
+	Apollo.RegisterEventHandler("OwnedCommodityOrders", "OnOwnedCommodityOrders", self)
+
+	Apollo.RegisterEventHandler("ItemAuctionWon", 							"OnRefresh", self)
+	Apollo.RegisterEventHandler("ItemAuctionOutbid", 						"OnRefresh", self)
+	Apollo.RegisterEventHandler("ItemAuctionExpired", 						"OnRefresh", self)
+	Apollo.RegisterEventHandler("ItemCancelResult", 						"OnRefresh", self)
+
 	self.wndMain = Apollo.LoadForm(self.supernova.xmlDoc, "IntegratedWatchlist", nil, self)
 
 	Apollo.RegisterTimerHandler("OneSecTimer", "OnTimer", self)
 end
 
 function IntegratedWatchlist:Open()
-	self.commodityHandler:RequestCommodityInfo()
+	self.commodityHandler:Refresh()
 	self:DrawCommodities()
 	self.wndMain:Invoke()
 end
@@ -39,7 +46,7 @@ function IntegratedWatchlist:DrawCommodities()
 				local row = IntegratedWatchlistRow:new({watchlist = self, supernova = self.supernova, commodity = value})
 				local listings = self.listingHandler:GetListingsById(value:GetId())
 				for _,listing in pairs(listings) do
-					local orderRow = IntegratedWatchlistOrderRow:new({watchlist = self, supernova = self.supernova, listing = listing})
+					local orderRow = IntegratedWatchlistOrderRow:new({watchlist = self, supernova = self.supernova, commodity = value, listing = listing})
 				end
 			end
 			wndGrid:ArrangeChildrenVert(0)
@@ -52,19 +59,29 @@ function IntegratedWatchlist:GetGrid()
 end
 
 function IntegratedWatchlist:OnRefreshClicked()
-	self.commodityHandler:RequestCommodityInfo()
+	self:OnRefresh()
+end
+
+function IntegratedWatchlist:OnRefresh()
+	self.commodityHandler:Refresh()
+	self.listingHandler:Refresh()
+	self.dirty = true
 end
 
 function IntegratedWatchlist:OnTimer()
 	if self.dirty then
 		self.dirty = false
-
 		self:DrawCommodities()
 	end
 end
 
 function IntegratedWatchlist:OnCommodityInfoResults(nItemId, tStats, tOrders)
 	self.commodityHandler:OnCommodityInfoResults(nItemId, tStats, tOrders)
+	self.dirty = true
+end
+
+function IntegratedWatchlist:OnOwnedCommodityOrders(nItemId, tStats, tOrders)
+	self.listingHandler:OnCommodityInfoResults(nItemId, tStats, tOrders)
 	self.dirty = true
 end
 

@@ -59,6 +59,10 @@ function CommodityHandler:RequestCommodityInfo()
 	end
 end
 
+function CommodityHandler:Refresh()
+	self:RequestCommodityInfo()
+end
+
 function CommodityHandler:Serialize()
 	local save = {}
 	for key, value in pairs(self.commodities) do
