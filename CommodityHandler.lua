@@ -66,7 +66,7 @@ end
 function CommodityHandler:Serialize()
 	local save = {}
 	for key, value in pairs(self.commodities) do
-		table.insert(save, value.id) 
+		table.insert(save, {id = value.id, buyWatchPrice = value.buyWatchPrice, sellWatchPrice = value.sellWatchPrice}) 
 	end
 	return save
 end
@@ -75,6 +75,19 @@ function CommodityHandler:Deserialize(commodityIds)
 	self:ClearCommodities()
 	for key, value in pairs(commodityIds) do
 		self:AddCommodity(value)
+ 	end
+end
+
+function CommodityHandler:Deserialize2(commodities)
+	self:ClearCommodities()
+	for key, value in pairs(commodities) do
+		local commodity = self:AddCommodity(value.id)
+		if value.buyWatchPrice then
+			commodity.buyWatchPrice = value.buyWatchPrice
+		end
+		if value.sellWatchPrice then
+			commodity.sellWatchPrice = value.sellWatchPrice
+		end
  	end
 end
 

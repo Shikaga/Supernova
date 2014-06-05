@@ -67,12 +67,17 @@ end
 
 function Supernova:OnSave(eLevel)
 	local save = {}
-	save.watchlist = self.commodityHandler:Serialize()
+	save.commodities = self.commodityHandler:Serialize()
 	return save
 end
 
 function Supernova:OnRestore(eLevel, tData)
-	self.commodityHandler:Deserialize(tData.watchlist)
+	if tData.watchlist then
+		self.commodityHandler:Deserialize(tData.watchlist)
+	end
+	if tData.commodities then
+		self.commodityHandler:Deserialize2(tData.commodities)
+	end
 end
 
 function Supernova:InitializeHooks()

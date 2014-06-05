@@ -14,6 +14,8 @@ function Commodity:new(o)
 	self.sell50 = '--'
 	self.sellOrderCount = '--'
 	self.buyOrderCount = '--'
+	self.buyWatchPrice = '--'
+	self.sellWatchPrice = '--'
 	return o
 end
 
@@ -31,6 +33,14 @@ end
 
 function Commodity:GetItem()
 	return Item.GetDataFromId(self.id)
+end
+
+function Commodity:SetBuyWatchPrice(price)
+	self.buyWatchPrice = price
+end
+
+function Commodity:SetSellWatchPrice(price)
+	self.sellWatchPrice = price
 end
 
 function Commodity:UpdateTStats(tStats)
