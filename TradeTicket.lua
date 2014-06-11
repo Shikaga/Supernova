@@ -139,6 +139,12 @@ function TradeTicket:SetConfirmationString(string)
 end
 
 function TradeTicket:EnableExecuteButton()
+
+	function round(num, idp)
+		local mult = 10^(idp or 0)
+		return math.floor(num * mult + 0.5) / mult
+	end
+
 	local executeButton = self.window:FindChild("ExecuteButton")
 	local order
 	if self.buySell == BUY then
@@ -159,7 +165,8 @@ function TradeTicket:EnableExecuteButton()
 		execBtn:SetActionData(GameLib.CodeEnumConfirmButtonType.MarketplaceCommoditiesSubmit, order)
 		executeButton:Enable(true)
 		local totalPrice = order:GetCount() * order:GetPricePerUnit():GetAmount() + order:GetTax():GetAmount()
-		local text = "You are going to " .. self:BuyOrSellString() .. " " .. order:GetCount() .. " [" .. self.commodity:GetName() .. "] for " .. order:GetPricePerUnit():GetAmount() .. "c each plus a fee of " .. order:GetTax():GetAmount() .. "c for total price of " .. totalPrice .. "c"
+		local each = round(totalPrice / order:GetCount(),2)
+		local text = "You are going to " .. self:BuyOrSellString() .. " " .. order:GetCount() .. " [" .. self.commodity:GetName() .. "] for " .. order:GetPricePerUnit():GetAmount() .. "c each plus a fee of " .. order:GetTax():GetAmount() .. "c for total price of " .. totalPrice .. "c costing roughly " .. each .. " per unit"
 		self.window:FindChild("TradeWindow"):FindChild("SummaryText"):SetText(text)
 	else
 
