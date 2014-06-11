@@ -33,16 +33,18 @@ function ListingPriceHandler:Init()
 	self.MarketplaceListings = Apollo.GetAddon("MarketplaceListings")
 
 	local fnOldRedrawData = self.MarketplaceListings.FactoryProduce
-	self.MarketplaceListings.FactoryProduce = function(arg1, arg2, arg3, arg4) 
-		local commodityId = arg4:GetItem():GetItemId()
+	self.MarketplaceListings.FactoryProduce = function(arg1, arg2, arg3, itemOrCredd) 
+		local wnd = fnOldRedrawData(arg1, arg2, arg3, itemOrCredd)
+		if itemOrCredd.GetItem then
+			local commodityId = itemOrCredd:GetItem():GetItemId()
+			local listingWnd = Apollo.LoadForm(self.xmlDoc, "ListingMarketPrice", wnd, self)
+			self.listingWindowMap[commodityId] = listingWnd
+			local commodity = self:AddCommodity(listingWnd, commodityId)
 
-		local wnd = fnOldRedrawData(arg1, arg2, arg3, arg4)
-		local listingWnd = Apollo.LoadForm(self.xmlDoc, "ListingMarketPrice", wnd, self)
-		self.listingWindowMap[commodityId] = listingWnd
-		local commodity = self:AddCommodity(listingWnd, commodityId)
+			lhr = ListingHandlerRow:new({supernova = self.supernova, commodity = commodity})
+			Apollo.LoadForm(self.xmlDoc, "LaunchTicketButton", wnd, lhr)
+		end
 
-		lhr = ListingHandlerRow:new({supernova = self.supernova, commodity = commodity})
-		Apollo.LoadForm(self.xmlDoc, "LaunchTicketButton", wnd, lhr)
 		return wnd
 	end
 end
